@@ -16,6 +16,8 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import java.util.Collections;
 import java.sql.*;
 import java.util.*;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 
 @SpringBootApplication
 @RestController
@@ -45,6 +47,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 	@RequestMapping(value = "/getAlertMode", method = RequestMethod.GET,
                 produces = MediaType.APPLICATION_JSON_VALUE)
 	String getAlertMode(String userId) {
+		
 		try {
 			System.out.print("Connecting to SQL Server ... ");
 			try (Connection connection = DriverManager.getConnection(DB_CONNECTION_STRING))        {
@@ -52,7 +55,11 @@ public class DemoApplication extends SpringBootServletInitializer {
 			}
 		} catch (Exception e) {
 			System.out.println();
-			return JSONObject.quote("sql querying failed" + e.getStackTrace().toString());
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			String sStackTrace = sw.toString();
+			return JSONObject.quote("sql querying failed" + sStackTrace);
 			
 		}
 		/*
