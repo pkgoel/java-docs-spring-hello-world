@@ -19,13 +19,13 @@ public class DemoApplication extends SpringBootServletInitializer {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET,
                 produces = MediaType.APPLICATION_JSON_VALUE)
-	String sayHello() {
-		return JSONObject.quote("Hello World");
+	String healthCheck() {
+		return JSONObject.quote("Health Check : Good");
 	}
 
 	@RequestMapping(value = "/account", method = RequestMethod.GET,
                 produces = MediaType.APPLICATION_JSON_VALUE)
 	String fetchAccountDetails() {
-		return JSONObject.quote("account details response");
+		return JSONObject.quote("accountkey: {account details response json}");
 	}
 }
