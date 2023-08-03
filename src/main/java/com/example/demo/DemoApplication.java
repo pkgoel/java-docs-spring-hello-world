@@ -46,6 +46,17 @@ public class DemoApplication extends SpringBootServletInitializer {
                 produces = MediaType.APPLICATION_JSON_VALUE)
 	String getAlertMode(String userId) {
 		try {
+			System.out.print("Connecting to SQL Server ... ");
+			try (Connection connection = DriverManager.getConnection(connectionUrl))        {
+				return JSONObject.quote("sql querying successful");
+			}
+		} catch (Exception e) {
+			System.out.println();
+			return JSONObject.quote("sql querying failed" + e.getStackTrace().toString());
+			
+		}
+		/*
+		try {
 			Connection conn = DriverManager.getConnection(url, username, password);
 			Statement statement = conn.createStatement();
 			ResultSet resultSet = statement.executeQuery("select isActive from dbo.alert_mode_status where userid = " + userId);
@@ -53,6 +64,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 		} 
 		catch(Exception e) {return JSONObject.quote("sql querying failed" + e.getMessage());
 		}
+		*/
 	}
 
 	@RequestMapping(value = "/setAlertMode", method = RequestMethod.GET,
