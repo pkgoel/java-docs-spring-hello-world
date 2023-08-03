@@ -45,10 +45,24 @@ public class DemoApplication extends SpringBootServletInitializer {
 		try {
 			Connection conn = DriverManager.getConnection(DB_CONNECTION_STRING);
 			Statement statement = conn.createStatement();
-			ResultSet resultSet = statement.executeQuery("select isActive from dbo.alert_mode_status where userid = 1");
+			ResultSet resultSet = statement.executeQuery("select isActive from dbo.alert_mode_status where userid = " + userId);
 			return JSONObject.quote("alertStatus: " + resultSet.toString());
 		} 
-		catch(Exception e) {return JSONObject.quote("sql querying failed");
+		catch(Exception e) {return JSONObject.quote("sql querying failed" + e.getMessage());
+		}
+	}
+
+	@RequestMapping(value = "/setAlertMode", method = RequestMethod.GET,
+                produces = MediaType.APPLICATION_JSON_VALUE)
+	String setAlertMode(String userId, Boolean setActive) {
+		try {
+			String activeStatus = setActive ? ", 1 )" : ", 0 )";
+			Connection conn = DriverManager.getConnection(DB_CONNECTION_STRING);
+			Statement statement = conn.createStatement();
+			ResultSet resultSet = statement.executeQuery("insert into dbo.alert_mode_status (userid, isActive) values (" + userId + activeStatus);
+			return JSONObject.quote("Edit status: " + resultSet.toString());
+		} 
+		catch(Exception e) {return JSONObject.quote("sql querying failed" + e.getMessage());
 		}
 	}
 
