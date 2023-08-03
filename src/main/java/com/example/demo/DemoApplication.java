@@ -64,7 +64,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 				String familyName = (String) payload.get("family_name");
 				String givenName = (String) payload.get("given_name");
 			}}
-		catch(Exception e) {		return JSONObject.quote("accountkey: {invalid token "+idTokenString+" }");
+		catch(Exception e) {		return JSONObject.quote("accountkey: {invalid token "+idTokenString+" }" + e.getLocalizedMessage());
 	}
 		
 		return JSONObject.quote("accountkey: {account details response as json}");
