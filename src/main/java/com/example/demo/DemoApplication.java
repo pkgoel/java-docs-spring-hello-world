@@ -63,9 +63,9 @@ public class DemoApplication extends SpringBootServletInitializer {
 			Statement statement = conn.createStatement();
 			ResultSet resultSet = statement.executeQuery(
 					"insert into dbo.alert_mode_status (userid, isActive) values (" + userId + activeStatus);
-			return JSONObject.quote("Edit status: " + resultSet.toString());
+			return JSONObject.quote("Alert status updated successfully");
 		} catch (Exception e) {
-			return JSONObject.quote("sql querying failed" + e.getMessage());
+			return JSONObject.quote("Alert status updation failed" + e.getMessage());
 		}
 	}
 
