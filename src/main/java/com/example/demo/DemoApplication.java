@@ -22,7 +22,10 @@ import java.util.*;
 public class DemoApplication extends SpringBootServletInitializer {
 	String CLIENT_ID = "347123406383-vpn5n3bkm8itcce6sbp3ambjvdq0rm21.apps.googleusercontent.com";
 	String DB_CONNECTION_STRING = "jdbc:sqlserver://beepmeupdbsqlserver.database.windows.net:1433;database=beepmeupdb;user=beepmeup@beepmeupdbsqlserver;password=Nishant1-db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
-	
+	String url = "jdbc:sqlserver://beepmeupdbsqlserver.database.windows.net:1433;database=beepmeupdb;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+	String username = "beepmeup@beepmeupdbsqlserver";
+	String password = "Nishant1-db";
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
@@ -44,7 +47,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 	String getAlertMode(String userId) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-			Connection conn = DriverManager.getConnection(DB_CONNECTION_STRING);
+			Connection conn = DriverManager.getConnection(url, username, password);
 			Statement statement = conn.createStatement();
 			ResultSet resultSet = statement.executeQuery("select isActive from dbo.alert_mode_status where userid = " + userId);
 			return JSONObject.quote("alertStatus: " + resultSet.toString());
