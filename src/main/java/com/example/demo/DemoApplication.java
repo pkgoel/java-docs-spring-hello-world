@@ -47,6 +47,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement
 					.executeQuery("select isActive from dbo.alert_mode_status where userid = " + userId);
+					return JSONObject.quote("AlertStatus for user "+resultSet.toString());
 			String alertStatus = resultSet.getBoolean("isActive") ? "Active" : "Inactive";
 			return JSONObject.quote("AlertStatus for user is : " + alertStatus);
 		} catch (Exception e) {
