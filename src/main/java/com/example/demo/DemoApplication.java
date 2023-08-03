@@ -63,7 +63,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 			String activeStatus = setActive ? ", 1 )" : ", 0 )";
 			Connection conn = DriverManager.getConnection(DB_CONNECTION_STRING);
 			Statement statement = conn.createStatement();
-			ResultSet resultSet = statement.executeQuery(
+			statement.executeQuery(
 					"insert into dbo.alert_mode_status (userid, isActive) values (" + userId + activeStatus);
 			return JSONObject.quote("Alert status updated successfully");
 		} catch (Exception e) {
