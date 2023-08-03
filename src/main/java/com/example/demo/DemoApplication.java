@@ -26,6 +26,6 @@ public class DemoApplication extends SpringBootServletInitializer {
 	@RequestMapping(value = "/account", method = RequestMethod.GET,
                 produces = MediaType.APPLICATION_JSON_VALUE)
 	String fetchAccountDetails() {
-		return JSONObject.quote("accountkey: {account details response json}");
+		return JSONObject.quote("accountkey: {account details response as json}");
 	}
 }
