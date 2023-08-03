@@ -18,7 +18,7 @@ import java.util.Collections;
 @SpringBootApplication
 @RestController
 public class DemoApplication extends SpringBootServletInitializer {
-	String CLIENT_ID = "CLIENT_ID";
+	String CLIENT_ID = "347123406383-vpn5n3bkm8itcce6sbp3ambjvdq0rm21.apps.googleusercontent.com";
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
@@ -32,6 +32,12 @@ public class DemoApplication extends SpringBootServletInitializer {
 	@RequestMapping(value = "/account", method = RequestMethod.GET,
                 produces = MediaType.APPLICATION_JSON_VALUE)
 	String fetchAccountDetails() {
+		return JSONObject.quote("accountkey: {account details response as json}");
+	}
+
+	@RequestMapping(value = "/getAlertMode", method = RequestMethod.GET,
+                produces = MediaType.APPLICATION_JSON_VALUE)
+	String getAlertMode(String userId) {
 		return JSONObject.quote("accountkey: {account details response as json}");
 	}
 
