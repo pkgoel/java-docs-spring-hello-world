@@ -67,11 +67,11 @@ public class DemoApplication extends SpringBootServletInitializer {
 			String currentStatus = getAlertMode(userId);
 			if (currentStatus == "Not set yet") {
 				String activeStatus = setActive ? ", 1 )" : ", 0 )";
-				statement.executeQuery(
+				statement.executeUpdate(
 						"insert into dbo.alert_mode_status (userid, isActive) values (" + userId + activeStatus);
 			} else {
 				String activeStatus = setActive ? " 1 " : " 0 ";
-				statement.executeQuery(
+				statement.executeUpdate(
 						"update dbo.alert_mode_status set isActive =" + activeStatus + "where userId = " + userId);
 			}
 			return JSONObject.quote("Alert status updated successfully");
