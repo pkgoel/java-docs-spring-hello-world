@@ -47,7 +47,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 	String getAlertMode(String userId) {
 		try {
 			System.out.print("Connecting to SQL Server ... ");
-			try (Connection connection = DriverManager.getConnection(connectionUrl))        {
+			try (Connection connection = DriverManager.getConnection(DB_CONNECTION_STRING))        {
 				return JSONObject.quote("sql querying successful");
 			}
 		} catch (Exception e) {
