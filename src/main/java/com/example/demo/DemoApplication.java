@@ -21,7 +21,7 @@ import java.util.*;
 @RestController
 public class DemoApplication extends SpringBootServletInitializer {
 	String CLIENT_ID = "347123406383-vpn5n3bkm8itcce6sbp3ambjvdq0rm21.apps.googleusercontent.com";
-	String DB_CONNECTION_STRING = "jdbc:sqlserver://beepmeupdbsqlserver.database.windows.net:1433;database=beepmeupdb;user=beepmeup@beepmeupdbsqlserver;password={your_password_here};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+	String DB_CONNECTION_STRING = "jdbc:sqlserver://beepmeupdbsqlserver.database.windows.net:1433;database=beepmeupdb;user=beepmeup@beepmeupdbsqlserver;password=Nishant1-db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
 	
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
