@@ -46,7 +46,6 @@ public class DemoApplication extends SpringBootServletInitializer {
                 produces = MediaType.APPLICATION_JSON_VALUE)
 	String getAlertMode(String userId) {
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
 			Connection conn = DriverManager.getConnection(url, username, password);
 			Statement statement = conn.createStatement();
 			ResultSet resultSet = statement.executeQuery("select isActive from dbo.alert_mode_status where userid = " + userId);
