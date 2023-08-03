@@ -14,11 +14,15 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import java.util.Collections;
+import java.sql.*;
+import java.util.*;
 
 @SpringBootApplication
 @RestController
 public class DemoApplication extends SpringBootServletInitializer {
 	String CLIENT_ID = "347123406383-vpn5n3bkm8itcce6sbp3ambjvdq0rm21.apps.googleusercontent.com";
+	String DB_CONNECTION_STRING = "jdbc:sqlserver://beepmeupdbsqlserver.database.windows.net:1433;database=beepmeupdb;user=beepmeup@beepmeupdbsqlserver;password={your_password_here};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+	
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}
@@ -38,7 +42,14 @@ public class DemoApplication extends SpringBootServletInitializer {
 	@RequestMapping(value = "/getAlertMode", method = RequestMethod.GET,
                 produces = MediaType.APPLICATION_JSON_VALUE)
 	String getAlertMode(String userId) {
-		return JSONObject.quote("accountkey: {account details response as json}");
+		try {
+			Connection conn = DriverManager.getConnection(DB_CONNECTION_STRING);
+			Statement statement = conn.createStatement();
+			ResultSet resultSet = statement.executeQuery("select isActive from dbo.alert_mode_status where userid = 1");
+			return JSONObject.quote("alertStatus: " + resultSet.toString());
+		} 
+		catch(Exception e) {return JSONObject.quote("sql querying failed");
+		}
 	}
 
 	@RequestMapping(value = "/googleauth", method = RequestMethod.GET,
@@ -63,7 +74,8 @@ public class DemoApplication extends SpringBootServletInitializer {
 				String locale = (String) payload.get("locale");
 				String familyName = (String) payload.get("family_name");
 				String givenName = (String) payload.get("given_name");
-			}}
+			}
+		}
 		catch(Exception e) {		return JSONObject.quote("accountkey: {invalid token "+idTokenString+" }" + e.getLocalizedMessage());
 	}
 		
