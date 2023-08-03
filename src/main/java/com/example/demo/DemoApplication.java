@@ -47,12 +47,14 @@ public class DemoApplication extends SpringBootServletInitializer {
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement
 					.executeQuery("select isActive from dbo.alert_mode_status where userid = " + userId);
-					resultSet.next();
-					String alertStatus = resultSet.getBoolean(0) ? "Active" : "Inactive";
-					connection.close();	
-					return JSONObject.quote("AlertStatus for user "+alertStatus);
+			String alertStatus = "Not set yet";
+			while (resultSet.next()) {
+				alertStatus = resultSet.getBoolean(0) ? "Active" : "Inactive";
+			}
+			connection.close();
+			return JSONObject.quote("AlertStatus for user " + alertStatus);
 		} catch (Exception e) {
-			return JSONObject.quote("sql querying failed" + e.getMessage());
+			return JSONObject.quote("Sql querying failed with : " + e.getMessage());
 		}
 	}
 
@@ -60,11 +62,18 @@ public class DemoApplication extends SpringBootServletInitializer {
 	String setAlertMode(String userId, Boolean setActive) {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			String activeStatus = setActive ? ", 1 )" : ", 0 )";
 			Connection conn = DriverManager.getConnection(DB_CONNECTION_STRING);
 			Statement statement = conn.createStatement();
-			statement.executeQuery(
-					"insert into dbo.alert_mode_status (userid, isActive) values (" + userId + activeStatus);
+			String currentStatus = getAlertMode(userId);
+			if (currentStatus == "Not set yet") {
+				String activeStatus = setActive ? ", 1 )" : ", 0 )";
+				statement.executeQuery(
+						"insert into dbo.alert_mode_status (userid, isActive) values (" + userId + activeStatus);
+			} else {
+				String activeStatus = setActive ? " 1 " : " 0 ";
+				statement.executeQuery(
+						"update dbo.alert_mode_status set isActive =" + activeStatus + "where userId = " + userId);
+			}
 			return JSONObject.quote("Alert status updated successfully");
 		} catch (Exception e) {
 			return JSONObject.quote("Alert status updation failed" + e.getMessage());
