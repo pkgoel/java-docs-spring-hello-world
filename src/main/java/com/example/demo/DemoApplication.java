@@ -39,8 +39,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 		return JSONObject.quote("accountkey: {account details response as json}");
 	}
 
-	@RequestMapping(value = "/getAlertMode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	String getAlertMode(String userId) {
+	String getAlertStatus(String userId) {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			Connection connection = DriverManager.getConnection(DB_CONNECTION_STRING);
@@ -49,13 +48,19 @@ public class DemoApplication extends SpringBootServletInitializer {
 					.executeQuery("select isActive from dbo.alert_mode_status where userid = " + userId);
 			String alertStatus = "Not set yet";
 			while (resultSet.next()) {
-				alertStatus = resultSet.getBoolean(0) ? "Active" : "Inactive";
+				alertStatus = resultSet.getBoolean("isActive") ? "Active" : "Inactive";
 			}
 			connection.close();
-			return JSONObject.quote("AlertStatus for user " + alertStatus);
+			return alertStatus;
 		} catch (Exception e) {
-			return JSONObject.quote("Sql querying failed with : " + e.getMessage());
+			return e.getMessage();
 		}
+	}
+
+	@RequestMapping(value = "/getAlertMode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	String getAlertMode(String userId) {
+		String alertStatus = getAlertStatus(userId);
+		return JSONObject.quote("AlertStatus for user " + alertStatus);
 	}
 
 	@RequestMapping(value = "/setAlertMode", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,7 +69,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 			Connection conn = DriverManager.getConnection(DB_CONNECTION_STRING);
 			Statement statement = conn.createStatement();
-			String currentStatus = getAlertMode(userId);
+			String currentStatus = getAlertStatus(userId);
 			if (currentStatus == "Not set yet") {
 				String activeStatus = setActive ? ", 1 )" : ", 0 )";
 				statement.executeUpdate(
@@ -76,7 +81,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 			}
 			return JSONObject.quote("Alert status updated successfully");
 		} catch (Exception e) {
-			return JSONObject.quote("Alert status updation failed" + e.getMessage());
+			return JSONObject.quote("Alert status updation failed " + e.getMessage());
 		}
 	}
 
