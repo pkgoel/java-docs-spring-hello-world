@@ -18,6 +18,11 @@ import java.sql.*;
 import java.util.*;
 import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.HttpURLConnection;
 
 @SpringBootApplication
 @RestController
@@ -113,5 +118,36 @@ public class DemoApplication extends SpringBootServletInitializer {
 		}
 
 		return JSONObject.quote("accountkey: {account details response as json}");
+	}
+
+	@RequestMapping(value = "/getotp", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	String sendSms(String number) {
+		try {
+			// Construct data
+			String apiKey = "apikey=" + "NmY3ODU3NTQzOTQ3NTg1NzQyNzMzMzY4NTU3NTYzNzc=";
+			String otp = "12345";
+			String message = "&message=" + "Your otp to verify beepmeup account : " + otp;
+			String sender = "&sender=" + "Beepmeup";
+			String numbers = "&numbers=" + "91" + number;
+
+			// Send data
+			HttpURLConnection conn = (HttpURLConnection) new URL("https://api.txtlocal.com/send/?").openConnection();
+			String data = apiKey + numbers + message + sender;
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
+			conn.getOutputStream().write(data.getBytes("UTF-8"));
+			final BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			final StringBuffer stringBuffer = new StringBuffer();
+			String line;
+			while ((line = rd.readLine()) != null) {
+				stringBuffer.append(line);
+			}
+			rd.close();
+
+			return JSONObject.quote("otp: 12345");
+		} catch (Exception e) {
+		return JSONObject.quote("Failed to trigger otp");
+		}
 	}
 }
