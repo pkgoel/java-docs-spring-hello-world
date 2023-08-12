@@ -145,7 +145,7 @@ public class DemoApplication extends SpringBootServletInitializer {
 			}
 			rd.close();
 
-			return JSONObject.quote("otp: 12345");
+			return JSONObject.quote(line);
 		} catch (Exception e) {
 		return JSONObject.quote("Failed to trigger otp");
 		}
